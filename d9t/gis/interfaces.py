@@ -40,6 +40,10 @@ class IDistanceCalculation(Interface):
         """ returns a list of nearest coordinates from coordinate_list to coordinate
             including distance.
         """
+        
+    def toRadiant(distance):
+        """ converts a given distance in miles or km or whatever to a radiant.
+        """
 
 class ICoordinateProvider(Interface):
     """ This is a utility to get ICoordinate from a country and zip code
@@ -48,3 +52,21 @@ class ICoordinateProvider(Interface):
     def coordinate(country, zip):
         """ Returns ICoordinates
         """
+
+class INearbyZips(Interface):
+    """ This looks for nearby zips within a given range.
+    """
+    
+    def nearbyZips(coordinate, distance):
+        """ coordinate is a ICoordinate. distance is radiants (float)
+        """
+                
+class IZipDatabase(Interface):
+    """ a zip database with filled attributes:
+        - data
+        - longitudes
+        - latitudes
+    """
+    data = Attribute("""a dict with keys like "country-zip" and values of Coordinate""")
+    latitudes = Attribute("""a OOBTree of latitudes with values like (country, zip)""")
+    longitudes = Attribute("""a OOBTree of longitudes with values like (country, zip)""")

@@ -61,17 +61,17 @@ You can measure distance between anything that provides ICoordinate. So:
 Between Coordinates
 
   >>> distance_util.distance(c1, c2)
-  65.033485081783084
+  65.033485081783098
 
 Between Addresses
 
   >>> distance_util.distance(a1, a2)
-  65.033485081783084
+  65.033485081783098
 
 Between Coordinates and Addresses
 
   >>> distance_util.distance(a1, c2)
-  65.033485081783084
+  65.033485081783098
   >>> distance_util.distance(a1, c1)
   0.0
 
@@ -101,7 +101,7 @@ Imagine we have a already existing class which is unaware of any gis info:
 
 You would then have objects of that type:
 
-  >>> my_a1 = MyAddress("Illextwiete 12", "22455", "Hamburg", "DE")
+  >>> my_a1 = MyAddress("Ilextwiete 12", "22455", "Hamburg", "DE")
   >>> my_a2 = MyAddress("Gangweg 2", "80797", "Muenchen", "DE")
 
 For measuring distance, your objects have to provide ICoordinate. So let's
@@ -149,6 +149,22 @@ You can also limit the search to e.g. 3 results (sorted of course):
   >>> nearest = distance_util.nearest(my_a2, (my_a1, my_a2, c1, c2, a1, a2), 3)
   >>> ["%s (%s)" % (n[0], n[1].__class__) for n in nearest]
   ["0.0 (<class 'MyAddress'>)", "175.137634687 (<class 'Address'>)", "175.137634687 (<class 'd9t.gis.coordinate.Coordinate'>)"]
+
+
+Get nearby ZIPs
+===============
+
+In case you need all zips within a given distance around a given coordinate, you might
+find the INearbyZips utility useful.
+
+  >>> from zope.component import getUtility
+  >>> from d9t.gis.interfaces import INearbyZips, IDistanceCalculation
+  >>> nbz = getUtility(INearbyZips)
+  >>> distance_util = getUtility(IDistanceCalculation, name="km")
+  >>> nbz.nearbyZips(c1, distance_util.toRadiant(10))
+  set([('DE', '89077'), ('DE', '89231'), ('DE', '89075'), ('DE', '89073')])
+
+This was for 10km. 
 
 
 --------

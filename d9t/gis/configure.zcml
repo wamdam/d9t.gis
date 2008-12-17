@@ -5,11 +5,30 @@
 
     <five:registerPackage package="." initialize=".initialize" />
 
+     <utility
+        component=".coordinate_providers.zip_database"
+        />
     <utility
-        component=".coordinate_providers.zip_coordinate_provider"
+        factory=".coordinate_providers.ZipCoordinateProvider"
+        />
+
+    
+    <!-- distance utilities. Default is km -->
+    <utility
+        component=".distance.km_distance"
         />
     <utility
         component=".distance.km_distance"
+        name="km"
+        />
+    <utility
+        component=".distance.miles_distance"
+        name="miles"
+        />
+
+
+     <utility
+        factory=".distance.NearbyZips"
         />
 
 </configure>

@@ -19,17 +19,26 @@
                 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from zope.interface import implements
-from interfaces import ICoordinateProvider
+from zope.component import getUtility
+from interfaces import ICoordinateProvider, IZipDatabase
 from coordinate import Coordinate
 import csv
 import os
 import logging
+import math
+from BTrees.OOBTree import OOBTree
 
-class ZipCoordinateProvider(object):
-    implements(ICoordinateProvider)
+class CsvZipDatabase(object):
+    """ a coordinate / zip database which loads data from a csv file
+    """
+    implements(IZipDatabase)
+    
+    data = OOBTree()
+    latitudes = OOBTree()
+    longitudes = OOBTree()
 
-    data = dict()
     log = logging.getLogger("ZipGis")
+
 
     def __init__(self, gisfile):
         """ Recieves a gis csv filename and loads data
@@ -41,18 +50,26 @@ class ZipCoordinateProvider(object):
             zip = row[1]
             latitude = row[2]
             longitude = row[3]
-            self.data[self._key(country, zip)] = Coordinate(latitude, longitude)
+            self.data[(country, zip)] = Coordinate(latitude, longitude)
+            self.latitudes[float(latitude)] = (country, zip)
+            self.longitudes[float(longitude)] = (country, zip)
         self.log.info("Finished importing GIS Data...")
-
-    def _key(self, country, zip):
-        """ creates a unique key """
-        return "%s-%s" % (country, zip)
-
-    def coordinate(self, country, zip):
-        return self.data.get(self._key(country, zip))
 
 HERE_DIR = os.path.abspath(os.path.dirname(__file__))
 DATA_DIR = os.path.join(HERE_DIR, "data")
 
-zip_coordinate_provider = ZipCoordinateProvider(gisfile=DATA_DIR+"/DE.csv")
+zip_database = CsvZipDatabase(gisfile=DATA_DIR+"/DE.csv")
+
+
+
+class ZipCoordinateProvider(object):
+    implements(ICoordinateProvider)
+    
+    iter_index = 0
+    
+    def coordinate(self, country, zip):
+        zip_database = getUtility(IZipDatabase)
+        return zip_database.data.get((country, zip))
+    
+
 
