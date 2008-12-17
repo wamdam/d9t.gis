@@ -165,6 +165,8 @@ find the INearbyZips utility useful.
   set([('DE', '89077'), ('DE', '89231'), ('DE', '89075'), ('DE', '89073')])
 
 This was for 10km. 
+Attention! This only works away from radiant bounderies. Stay away from +-180 degrees!
+This is due to speed optimizations. Sorry ;)
 
 
 --------
