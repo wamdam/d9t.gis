@@ -32,10 +32,13 @@ class Distance(object):
     def distance(self, c1, c2):
         c1 = ICoordinate(c1)
         c2 = ICoordinate(c2)
-        dst = math.acos(
-                        (math.sin(math.radians(c1.latitude)) * math.sin(math.radians(c2.latitude))) +
-                        (math.cos(math.radians(c1.latitude)) * math.cos(math.radians(c2.latitude)) * math.cos(math.radians(c1.longitude) - math.radians(c2.longitude)))
-                ) * self.earth_radius
+        asd = (
+                (math.sin(math.radians(c1.latitude)) * math.sin(math.radians(c2.latitude))) +
+                (math.cos(math.radians(c1.latitude)) * math.cos(math.radians(c2.latitude)) * math.cos(math.radians(c1.longitude) - math.radians(c2.longitude)))
+                )
+        if asd > 1.0:
+            asd = 1.0 # distance 0. Can be a slight bit > 1 due to float type errors.
+        dst = math.acos(asd) * self.earth_radius
 
         return dst
 

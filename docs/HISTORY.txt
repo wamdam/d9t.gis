@@ -1,6 +1,13 @@
 Changelog
 =========
 
+d9t.gis - 0.4 [20120525]
+
+    - Fixed a bug where a rounding error (caused by float) crashed
+      with ValueError: math domain error when the lookup-coordinate
+      were identical to one in the list, i.e. when the distance
+      should have been 0.
+
 d9t.gis - 0.3 [20081217]
 
     - Added nearby Zips utility (FAST, no. DAMN FAST!) [Daniel Kraft, Oliver Roch]
@@ -17,5 +24,4 @@ d9t.gis - 0.1 Unreleased
 
     - Initial package structure.
       [zopeskel]
-
 
